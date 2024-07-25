@@ -1,0 +1,84 @@
+# Levels of Training Large Language Models (LLMs)
+
+In the world of LLMs, there are four primary levels of training and fine-tuning. Each level serves a specific purpose and involves different amounts of data and computational resources. Let's explore these levels in detail.
+
+## 1. Pretraining on Raw Text
+
+Pretraining is the foundation of creating a new base model. This level is used when you want to develop a model from scratch or create a specialized base model for specific domains like mathematics, medicine, or other specialized topics.
+
+### Characteristics:
+
+- **Data Volume**: Involves training on enormous amounts of text data, often trillions of tokens.
+- **Computational Resources**: Extremely resource-intensive and expensive.
+- **Duration**: Can take weeks or months, even with powerful hardware.
+- **Purpose**: To learn general language patterns, grammar, and broad knowledge.
+
+### Example Use Cases:
+
+- Creating a new general-purpose LLM like GPT-3 or BERT.
+- Developing a domain-specific base model (e.g., BioBERT for biomedical text).
+
+This is very rare, but if you want train a base model . You need to create a .jsonl file with the text chunk
+
+Dataset Type: TEXT
+
+```bash dataset.jsonl
+{"text": "Some important task with context" }
+{"text": "Some important task with context" }
+{"text": "Some important task with context" }
+```
+
+## 2. Instruction Tuning
+
+Instruction tuning is the process of fine-tuning a pretrained model to follow specific instructions or prompts.
+This is the most common fine tuning, since base model has compressed most the world knowledge, you
+only have to train them on your task.
+
+### Example Use Cases:
+
+- Text-SQL, TEXT-API, Question Answering, Text to action, Retrievals, Generate HTML design from prompt
+- Enhancing the model's understanding of task-specific prompts.
+- Fine tune small model on synthetic dataset from a bigger model for cost reduction.
+- Fine tune small model on to prevent long repetitive prompt and speed.
+- Fine tune big model on hard task that father modal cant solve.
+
+```bash dataset.jsonl
+{"instruction": "Some important task with context ?", "output": "Boo" }
+{"instruction": "Some important task with context ?", "output": "Boo" }
+{"instruction": "Some important task with context ?", "output": "Boo" }
+```
+
+## 3. Chat Tuning
+
+Chat tuning is a specialized form of instruction tuning that focuses on improving the model's conversational abilities.
+So if build an interactive chatbot this is what you need to train
+
+### Example Use Cases:
+
+- Developing chatbots or virtual assistants.
+- Improving the model's ability to handle multi-turn conversations and maintain context.
+
+```bash dataset.jsonl
+[{"role": "user", "content": "Hi can I train llama model"}, {"role": "assistant", "content": "Sure"}]
+[{"role": "user", "content": "Hi can I train llama model"}, {"role": "assistant", "content": "Sure"}]
+[{"role": "user", "content": "Hi can I train llama model"}, {"role": "assistant", "content": "Sure"}]
+```
+
+## 4. Direct Preference Optimization (DPO)
+
+DPO is an advanced fine-tuning technique that aims to align the model's outputs with human preferences.
+
+### Example Use Cases:
+
+- Improving the model's ability to generate more natural, ethical, or stylistically appropriate responses.
+- Fine-tuning the model to adhere to specific guidelines or tone preferences.
+
+```bash dataset.jsonl
+{ "instruction": "....", "chosen": "...", "rejected": "..." }
+{ "instruction": "....", "chosen": "...", "rejected": "..." }
+{ "instruction": "....", "chosen": "...", "rejected": "..." }
+```
+
+## Conclusion
+
+Each level of LLM training serves a specific purpose in the development and refinement of these powerful AI models. While pretraining creates the foundation, the subsequent levels of fine-tuning allow for more specialized and targeted improvements. Understanding these levels can help in choosing the right approach for developing or customizing LLMs for specific applications.

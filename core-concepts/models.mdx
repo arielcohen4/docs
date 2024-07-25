@@ -1,0 +1,49 @@
+---
+title: "Models"
+description: "Display inline code and code blocks"
+---
+
+# LLM Models Available for Fine-tuning
+
+This page provides an overview of the Large Language Models (LLMs) available for fine-tuning. The table below lists key details for each model, including its name, family, parameter count, context length, and additional features.
+
+| Model Name                  | Family            | Parameters (B) | Context Length | vLLM Support | LoRA Support |
+| --------------------------- | ----------------- | -------------- | -------------- | ------------ | ------------ |
+| Meta-Llama-3-70B-Instruct   | llama3            | 70             | 8,192          | Yes          | Yes          |
+| Meta-Llama-3-8B             | llama3            | 8              | 8,192          | Yes          | Yes          |
+| TinyLlama_v1.1              | tinyllama         | 1.1            | 2,048          | No           | No           |
+| Gemma-2-9b-it               | gemma2            | 9              | 8,192          | Yes          | Yes          |
+| Meta-Llama-3-8B-Instruct    | llama3            | 8              | 8,192          | Yes          | Yes          |
+| Qwen2-0.5B                  | qwen2             | 0.5            | 32,768         | Yes          | Yes          |
+| Qwen2-7B-Instruct           | qwen2             | 7              | 32,768         | Yes          | Yes          |
+| Qwen2-7B                    | qwen2             | 7              | 32,768         | Yes          | Yes          |
+| Qwen2-72B-Instruct          | qwen2             | 72             | 32,768         | Yes          | Yes          |
+| Gemma-2-27b                 | gemma2            | 27             | 8,192          | Yes          | Yes          |
+| Qwen2-1.5B                  | qwen2             | 1.5            | 32,768         | Yes          | Yes          |
+| Qwen2-72B                   | qwen2             | 72             | 32,768         | Yes          | Yes          |
+| Qwen2-1.5B-Instruct         | qwen2             | 1.5            | 32,768         | Yes          | Yes          |
+| Gemma-2-9b                  | gemma2            | 9              | 8,192          | Yes          | Yes          |
+| Qwen2-57B-A14B              | qwen2             | 57             | 32,768         | Yes          | Yes          |
+| Qwen2-0.5B-Instruct         | qwen2             | 0.5            | 32,768         | Yes          | Yes          |
+| Qwen2-57B-A14B-Instruct     | qwen2             | 57             | 32,768         | Yes          | Yes          |
+| Phi-3-small-8k-instruct     | phi3              | 7.4            | 8,000          | Yes          | No           |
+| Phi-3-medium-128k-instruct  | phi3              | 14             | 128,000        | Yes          | No           |
+| Phi-3-mini-4k-instruct      | phi3              | 3.8            | 4,096          | Yes          | No           |
+| Phi-3-mini-128k-instruct    | phi3              | 3.8            | 128,000        | Yes          | No           |
+| Phi-3-small-128k-instruct   | phi3              | 7.4            | 128,000        | Yes          | No           |
+| Phi-3-medium-4k-instruct    | phi3              | 14             | 4,000          | Yes          | No           |
+| Mixtral-8x7B-Instruct-v0.1  | mixtral           | 46.7           | 32,768         | Yes          | Yes          |
+| Meta-Llama-3-70B            | llama3            | 70             | 8,192          | Yes          | Yes          |
+| Gemma-2-27b-it              | gemma2            | 27             | 8,192          | Yes          | Yes          |
+| DeepSeek-Coder-V2-Lite-Base | deepseek-coder-v2 | 16             | 163,840        | No           | No           |
+| c4ai-command-r-v01          | command-r         | 35             | 131,072        | Yes          | No           |
+| Mistral-7B-Instruct-v0.3    | mistral           | 7.2            | 32,768         | Yes          | Yes          |
+
+## Notes:
+
+- "vLLM Support" indicates whether the model is compatible with the vLLM (very Large Language Model) inference framework.
+- "LoRA Support" shows if the model supports Low-Rank Adaptation (LoRA), a technique for efficient fine-tuning.
+- Context length is measured in tokens.
+- Parameter count is shown in billions (B).
+
+This table provides a comprehensive overview of the available models, their sizes, capabilities, and support for various fine-tuning techniques. When choosing a model for fine-tuning, consider factors such as the model size, context length, and support for specific optimization techniques like vLLM and LoRA.
