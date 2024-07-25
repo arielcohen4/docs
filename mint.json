@@ -52,7 +52,6 @@
         "core-concepts/datasets",
         "core-concepts/models",
         "core-concepts/fine-tunes",
-        "core-concepts/tasks",
         "core-concepts/checkpoints"
       ]
     },

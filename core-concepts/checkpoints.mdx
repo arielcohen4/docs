@@ -1,0 +1,84 @@
+---
+title: Checkpoints
+description: Checkpoints of training models
+---
+
+# Understanding and Using Model Checkpoints
+
+During the training process, we save checkpoints that represent the current state of your model. These checkpoints are crucial for preserving training progress and allow you to resume training or use the model at various stages of its development.
+
+## Types of Checkpoints
+
+We offer two types of checkpoints:
+
+1. **Regular Checkpoints**
+2. **LoRA Checkpoints**
+
+### Regular Checkpoints
+
+Regular checkpoints contain the full state of the model, including all parameters.
+
+- **Advantages**:
+  - Can be used directly with vLLM for inference
+  - Represent the complete model state
+- **Use Cases**:
+  - When you need to deploy the full model
+  - For scenarios where you don't need the flexibility of LoRA
+
+### LoRA (Low-Rank Adaptation) Checkpoints
+
+LoRA checkpoints contain only the adaptations made to the base model, significantly reducing the checkpoint size.
+
+- **Advantages**:
+  - Smaller file size
+  - Can be combined with different base models
+  - Allows for mixing multiple adaptations
+- **Use Cases**:
+  - When you want to fine-tune a model for multiple tasks
+  - For efficient storage and transfer of model adaptations
+
+## Using LoRA Checkpoints
+
+LoRA checkpoints can be utilized in two main ways:
+
+1. **Merged with Base Model**:
+
+   - Combine the LoRA adaptations with the original base model to create a full model
+   - Useful when you want to deploy a single, adapted model
+
+2. **Used with Base Model and Multiple Adapters**:
+   - Keep the base model separate and apply one or more LoRA adaptations at runtime
+   - Can be done using vLLM or the LoRAX library
+   - Allows for dynamic mixing of different adaptations
+
+## Checkpoint Metrics
+
+Each checkpoint includes metrics such as `eval_loss`, which helps you identify the best-performing checkpoint. Lower `eval_loss` generally indicates better model performance on the evaluation dataset.
+
+## Downloading Checkpoints
+
+To download a checkpoint directly to your GPU server:
+
+1. Navigate to the dashboard
+2. Find the desired checkpoint
+3. Copy the provided CLI command
+4. Run the command on your server to download and extract the checkpoint
+
+The CLI command will use a pre-signed URL to securely download the checkpoint and automatically extract it for you.
+
+Example command structure:
+
+```bash
+curl -L "https://presigned-url-to-your-checkpoint.com" | tar -xzvf -
+```
+
+This command downloads the checkpoint using the pre-signed URL and extracts it in one step.
+
+## Best Practices
+
+- Regularly save checkpoints during long training runs
+- Compare `eval_loss` metrics to choose the best checkpoint
+- For production, consider using regular checkpoints with vLLM for simplicity
+- For research or multi-task scenarios, leverage LoRA checkpoints for flexibility
+
+By understanding and effectively using checkpoints, you can streamline your model development process, easily experiment with different model versions, and efficiently deploy your trained models.

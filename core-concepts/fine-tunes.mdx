@@ -3,63 +3,62 @@ title: "Fine tune"
 description: "The navigation field in mint.json defines the pages that go in the navigation menu"
 ---
 
-The navigation menu is the list of links on every website.
+# Fine-tuning Challenges and How Flex AI Solves Them
 
-You will likely update `mint.json` every time you add a new page. Pages do not show up automatically.
+Fine-tuning Large Language Models (LLMs) can be a complex and challenging process. This page outlines common problems encountered during fine-tuning and explains how Flex AI addresses these issues to make the process smoother and more efficient.
 
-## Navigation syntax
+## Common Challenges in Fine-tuning
 
-Our navigation syntax is recursive which means you can make nested navigation groups. You don't need to include `.mdx` in page names.
+### 1. Technical Pitfalls
 
-<CodeGroup>
+Small technical details like pad tokens, resizing embeddings, and other configuration issues can lead to wasted time and resources. These seemingly minor aspects can cause training to fail or produce suboptimal results.
 
-```json Regular Navigation
-"navigation": [
-    {
-        "group": "Getting Started",
-        "pages": ["quickstart"]
-    }
-]
-```
+### 2. GPU Selection and Cost Optimization
 
-```json Nested Navigation
-"navigation": [
-    {
-        "group": "Getting Started",
-        "pages": [
-            "quickstart",
-            {
-                "group": "Nested Reference Pages",
-                "pages": ["nested-reference-page"]
-            }
-        ]
-    }
-]
-```
+Choosing the right GPU for training can be difficult. With numerous providers offering different pricing models, it's challenging to ensure you're getting the best value. Switching between providers is often complicated, potentially causing you to miss out on cost savings.
 
-</CodeGroup>
+### 3. Time and Cost Estimation
 
-## Folders
+Accurately estimating the time and cost for training is notoriously difficult. This uncertainty can lead to budget overruns and scheduling issues.
 
-Simply put your MDX files in folders and update the paths in `mint.json`.
+### 4. Model-Specific Requirements
 
-For example, to have a page at `https://yoursite.com/your-folder/your-page` you would make a folder called `your-folder` containing an MDX file called `your-page.mdx`.
+Each model has its own prompt template, settings, and required libraries. Failing to adhere to these specific requirements can result in failed or ineffective training.
 
-<Warning>
+### 5. Hyperparameter Optimization
 
-You cannot use `api` for the name of a folder unless you nest it inside another folder. Mintlify uses Next.js which reserves the top-level `api` folder for internal server calls. A folder name such as `api-reference` would be accepted.
+Choosing the right hyperparameters is crucial. Small mistakes, like using an inappropriate learning rate, can render the entire training process ineffective. Additionally, suboptimal choices like excessive checkpointing can significantly slow down the training process.
 
-</Warning>
+### 6. Inference Library Compatibility
 
-```json Navigation With Folder
-"navigation": [
-    {
-        "group": "Group Name",
-        "pages": ["your-folder/your-page"]
-    }
-]
-```
+Compatibility issues between the trained model and the target inference library can arise late in the process. This can lead to wasted effort if the model doesn't work with your chosen inference setup or if the library imposes unexpected limitations (e.g., reduced context size).
 
-## Hidden Pages
+## How Flex AI Solves These Challenges
 
-MDX files not included in `mint.json` will not show up in the sidebar but are accessible through the search bar and by linking directly to them.
+### 1. Built-in Best Practices
+
+Flex AI incorporates best practices and optimal configurations for all supported models. This approach eliminates the need to manually handle technical details, reducing the risk of errors.
+
+### 2. Flexible Compute Provider Integration
+
+Our platform is designed to connect with various compute providers, giving you the flexibility to choose the most cost-effective option without being locked into a specific vendor.
+
+### 3. Automatic Time and Cost Estimation
+
+Flex AI provides automatic time and cost estimates for every model, allowing for better planning and budgeting. You can cancel training with no cost if estimates don't align with your expectations.
+
+### 4. Unified Dataset Format
+
+We offer three standardized dataset types that work across different models. This uniformity eliminates the need to reformat your data for each specific model you want to train.
+
+### 5. Hyperparameter Protection
+
+Flex AI implements safeguards against problematic hyperparameter choices. We protect against issues like excessive checkpointing, inappropriate learning rates, and unsuitable LoRA dimensions. The platform also checks your dataset's maximum token length to ensure compatibility with the chosen model.
+
+### 6. Inference Compatibility Checks
+
+When initiating training, you select your target inference library. Flex AI then performs compatibility checks, providing warnings about potential limitations or errors before you invest time and resources in training.
+
+## Conclusion
+
+Fine-tuning LLMs presents numerous challenges that can lead to wasted time, effort, and resources if not properly addressed. Flex AI is designed to tackle these challenges head-on, providing a more streamlined, efficient, and cost-effective fine-tuning experience. By automating best practices, offering flexibility in resource selection, and implementing robust checks and balances, Flex AI empowers users to focus on achieving optimal results rather than grappling with technical hurdles.
