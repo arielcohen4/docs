@@ -5,20 +5,19 @@ description: "Start training in under 5 minutes"
 
 ## Register for an account
 
-First, [register for an account](https://app.getflex.ai/auth) to get an API key. New accounts come with $5 to get started.
+First, [register for an account](https://app.getflex.ai/sign-up) to get an API key. New accounts come with $5 to get started.
 
-Once you've registered, go to [settings](https://app.getflex.ai/settings) and find your api key:
+Once you've registered, go to [settings](https://app.getflex.ai/settings/api-keys) and find your api key:
 
 <Info>
-  **Prerequisite** You should have installed Node.js (version 18.10.0 or
-  higher).
+  **Prerequisite** You should have installed Python (version 3 or higher).
 </Info>
 
 Step 1. Install Flex AI on your OS:
 
 <CodeGroup>
 
-```bash python
+```bash CLI
 pip install flex_ai
 ```
 
@@ -26,11 +25,23 @@ pip install flex_ai
 
 Step 2. Init your flex_ai instance
 
-```bash python
-client = FlexAI(api_key="API_KEY")
+<CodeGroup>
+
+```bash Python
+client = FlexAI(api_key="xxxxxx")
 ```
 
-### Upload your first Dataset
+```bash Linux
+export FLEX_AI_API_KEY=xxxxxxxxxxxx
+```
+
+```bash Windows
+set FLEX_AI_API_KEY=xxxxxxxxxxxx
+```
+
+</CodeGroup>
+
+## Upload your first Dataset
 
 In FlexAI, there are 3 types of Datasets:
 
@@ -45,29 +56,56 @@ A datasets will have two .jsonl files, one for train and one for eval (evak is o
 For example:
 create a train.jsonl file:
 
-```bash train.jsonl
+<CodeGroup>
+
+```bash train-instruction.jsonl
 {"instruction": "Some important task with context ?", "output": "Boo" }
 {"instruction": "Some important task with context ?", "output": "Boo" }
 {"instruction": "Some important task with context ?", "output": "Boo" }
 ```
 
-```bash python
-client = FlexAI(api_key="API_KEY")
+```bash train-chat.jsonl
+[{"role": "user", "content": "Hi can I train llama model"}, {"role": "assistant", "content": "Sure"}]
+[{"role": "user", "content": "Hi can I train llama model"}, {"role": "assistant", "content": "Sure"}]
+[{"role": "user", "content": "Hi can I train llama model"}, {"role": "assistant", "content": "Sure"}]
+```
+
+```bash train-text.jsonl
+{"text": "Some important task with context ? I think I kow" }
+{"text": "Some important task with context ? I think I kow" }
+{"text": "Some important task with context ? I think I kow" }
+```
+
+</CodeGroup>
+
+Now let's create a new dataset
+
+<CodeGroup>
+
+```bash Python
 dataset = client.create_dataset("API Dataset New",
                                "instruction/train.jsonl",
                                "instruction/eval.jsonl",
                                 DatasetType.INSTRUCTION)
 ```
 
+```bash CLI
+flex_ai datasets create --name "New Dataset" --train-path="train.jsonl" --eval-path="eval.json" --type="instruction"
+```
+
+</CodeGroup>
+
 You will get back a dataset id to use for run fine tunning
 
-## Train
+## Fine tune
 
 You view all our models in the [Models Page](https://app.getflex.ai/models)
+You can then select a model and dataset and start training.
+You can also send fine tune directly from the [Dashboard](https://app.getflex.ai/create)
 
 <CodeGroup>
 
-```bash python
+```bash Python
 client.create_finetune(name="My Task New",
                        dataset_id=dataset["id"],
                        model="TinyLlama/TinyLlama-1.1B-step-50K-105b",
@@ -75,13 +113,30 @@ client.create_finetune(name="My Task New",
                        train_with_lora=True,
                        lora_config={"lora_r": 64, "lora_alpha": 8, "lora_dropout": 0.1},
                        n_checkpoints_and_evaluations_per_epoch=1
-                      #  batch_size=4, learning_rate=0.0001, n_checkpoints_and_evaluations_per_epoch=1,
-                      #  save_only_best_checkpoint=True, train_with_lora=True,
-                      #  lora_config={"lora_r": 64, "lora_alpha": 8, "lora_dropout": 0.1},
-                      #  early_stopping_config={"patience": 1, "threshold": 0.1}
-                       )
+                       batch_size=4, learning_rate=0.0001, n_checkpoints_and_evaluations_per_epoch=1,
+                       save_only_best_checkpoint=True, train_with_lora=True,
+                       lora_config={"lora_r": 64, "lora_alpha": 8, "lora_dropout": 0.1}
+                      )
+```
+
+```bash CLI
+flex_ai fine-tuning create \
+  --name "Sample Fine-Tuning Task" \
+  --dataset-id "62bf5ae8-bbba-438b-9564-36bc902ab393" \
+  --model "TinyLlama/TinyLlama_v1.1" \
+  --n-epochs 3 \
+  --train-with-lora True \
+  --n-checkpoints-and-evaluations-per-epoch 2 \
+  --lora-r 64 \
+  --lora-alpha 16 \
+  --lora-dropout 0.1 \
+  --batch-size 8 \
+  --learning-rate 2e-5 \
+  --save-only-best-checkpoint True
 ```
 
 </CodeGroup>
 
-You view all our models in the [Models Page](https://app.getflex.ai/models)
+After you send the fine tuning task, you can view the training metrics on Weights and Biases.
+Also you can check the dashboard to see the price estimation for that task and decide if you want to cancel or not.
+Checkpoints will be created in parallel to the training.
