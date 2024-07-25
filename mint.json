@@ -11,7 +11,7 @@
     "light": "#07C983",
     "dark": "#0D9373",
     "anchors": {
-     "from": "#0D9373",
+      "from": "#0D9373",
       "to": "#07C983"
     }
   },
@@ -43,28 +43,64 @@
       "group": "Get Started",
       "pages": [
         "introduction",
-        "quickstart"
+        "quickstart",
+        "authentication"
       ]
     },
     {
-      "group": "Essentials",
+      "group": "Core Concepts",
       "pages": [
-        "essentials/datasets",
-        "essentials/finetunes"
+        "core-concepts/datasets",
+        "core-concepts/models",
+        "core-concepts/fine-tunes",
+        "core-concepts/tasks",
+        "core-concepts/checkpoints"
       ]
     },
     {
-      "group": "API Documentation",
+      "group": "API Reference",
       "pages": [
-        "api-reference/introduction"
-      ]
-    },
-    {
-      "group": "Endpoint Examples",
-      "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "api-reference/introduction",
+        {
+          "group": "Authentication",
+          "pages": [
+            "api-reference/auth/validate-api-key"
+          ]
+        },
+        {
+          "group": "Datasets",
+          "pages": [
+            "api-reference/datasets/list-datasets",
+            "api-reference/datasets/create-dataset",
+            "api-reference/datasets/generate-upload-urls"
+          ]
+        },
+        {
+          "group": "Models",
+          "pages": [
+            "api-reference/models/list-models"
+          ]
+        },
+        {
+          "group": "Fine-tunes",
+          "pages": [
+            "api-reference/fine-tunes/create-fine-tune"
+          ]
+        },
+        {
+          "group": "Tasks",
+          "pages": [
+            "api-reference/tasks/get-task",
+            "api-reference/tasks/cancel-task"
+          ]
+        },
+        {
+          "group": "Checkpoints",
+          "pages": [
+            "api-reference/checkpoints/list-checkpoints",
+            "api-reference/checkpoints/download-checkpoint"
+          ]
+        }
       ]
     }
   ],
