@@ -162,14 +162,14 @@
     },
     "/checkpoints": {
       "post": {
-        "summary": "List Checkpoints",
+        "summary": "Get Checkpoint",
         "operationId": "listCheckpoints",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/GetTaskCheckpointsRequest"
+                "$ref": "#/components/schemas/GetCheckpointRequest"
               }
             }
           }
@@ -328,6 +328,124 @@
           }
         }
       }
+    },
+    "/tasks/checkpoints": {
+      "post": {
+        "summary": "Get Task Checkpoints",
+        "operationId": "getTaskCheckpoints",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTaskCheckpointsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Checkpoint"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/checkpoints/convert_to_gguf": {
+      "post": {
+        "summary": "Convert Checkpoint to GGUF",
+        "operationId": "convertCheckpointToGGUF",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGGUFCheckpointsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/checkpoints/download_gguf": {
+      "post": {
+        "summary": "Download GGUF Checkpoint",
+        "operationId": "downloadGGUFCheckpoint",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGGUFCheckpointsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -440,6 +558,15 @@
           },
           "storage_key": {
             "type": "string"
+          },
+          "gguf_conversion_stage": {
+            "type": "string"
+          },
+          "gguf_storage_key": {
+            "type": "string"
+          },
+          "stage": {
+            "type": "string"
           }
         }
       },
@@ -467,6 +594,14 @@
           }
         }
       },
+      "GetCheckpointRequest": {
+        "type": "object",
+        "properties": {
+          "checkpoint_id": {
+            "type": "string"
+          }
+        }
+      },
       "CreateDatasetRequest": {
         "type": "object",
         "properties": {
@@ -479,53 +614,52 @@
           "train_rows_count": {
             "type": "integer"
           },
-          "eval_rows_count": {
-            "type": "integer"
-          },
-          "max_tokens": {
-            "type": "integer"
-          },
-          "total_tokens": {
-            "type": "integer"
-          },
-          "type": {
-            "type": "string"
-          }
-        }
-      },
-      "CreateFinetuneRequest": {
-        "type": "object",
-        "required": [
-          "name",
-          "dataset_id",
-          "model",
-          "n_epochs",
-          "train_with_lora"
-        ],
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "model": {
-            "type": "string"
-          },
-          "dataset_id": {
-            "type": "string"
-          },
-          "n_epochs": {
+          "eval_rows_count": {            "type": "integer"
+        },
+        "max_tokens": {
           "type": "integer"
-          },
-          "train_with_lora": {
-            "type": "boolean"
-          },
-          "batch_size": {
-            "type": "integer"
-          },
-          "wandb_key": {
+        },
+        "total_tokens": {
+          "type": "integer"
+        },
+        "type": {
           "type": "string"
-          },
-          "learning_rate": {
-        "type": "number"
+        }
+      }
+    },
+    "CreateFinetuneRequest": {
+      "type": "object",
+      "required": [
+        "name",
+        "dataset_id",
+        "model",
+        "n_epochs",
+        "train_with_lora"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "dataset_id": {
+          "type": "string"
+        },
+        "n_epochs": {
+          "type": "integer"
+        },
+        "train_with_lora": {
+          "type": "boolean"
+        },
+        "batch_size": {
+          "type": "integer"
+        },
+        "wandb_key": {
+          "type": "string"
+        },
+        "learning_rate": {
+          "type": "number"
         },
         "n_checkpoints_and_evaluations_per_epoch": {
           "type": "integer",
@@ -543,52 +677,71 @@
           "type": "object",
           "additionalProperties": true
         }
-        }
-      },
-      "Error": {
-        "type": "object",
-        "required": [
-          "error",
-          "message"
-        ],
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
       }
     },
-    "responses": {
-      "NotFound": {
-        "description": "The specified resource was not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Error"
-            }
-          }
+    "CreateGGUFCheckpointsRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
         }
       },
-      "InternalServerError": {
-        "description": "Unexpected error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Error"
-            }
-          }
-        }
-      }
+      "required": ["id"]
     },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+    "Error": {
+      "type": "object",
+      "required": [
+        "error",
+        "message"
+      ],
+      "properties": {
+        "error": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        }
       }
     }
+  },
+  "responses": {
+    "NotFound": {
+      "description": "The specified resource was not found",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Error"
+          }
+        }
+      }
+    },
+    "BadRequest": {
+      "description": "Bad request",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Error"
+          }
+        }
+      }
+    },
+    "InternalServerError": {
+      "description": "Unexpected error",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Error"
+          }
+        }
+      }
+    }
+  },
+  "securitySchemes": {
+    "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer"
+    }
   }
+}
 }
