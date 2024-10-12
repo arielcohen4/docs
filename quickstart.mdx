@@ -86,12 +86,11 @@ Now let's create a new dataset
 ```bash Python
 dataset = client.create_dataset("API Dataset New",
                                "instruction/train.jsonl",
-                               "instruction/eval.jsonl",
-                                DatasetType.INSTRUCTION)
+                               "instruction/eval.jsonl")
 ```
 
 ```bash CLI
-flex_ai datasets create --name "New Dataset" --train-path="train.jsonl" --eval-path="eval.json" --type="instruction"
+flex_ai datasets create --name "New Dataset" --train-path="train.jsonl" --eval-path="eval.json"
 ```
 
 </CodeGroup>
