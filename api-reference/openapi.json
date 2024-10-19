@@ -446,10 +446,158 @@
           }
         }
       }
+    },
+    "/endpoints/create_regular_endpoint": {
+      "post": {
+        "summary": "Create Endpoint",
+        "description": "Create either a regular or multi-LORA endpoint based on the request body",
+        "operationId": "createEndpoint",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRegularEndpointRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "endpoint_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/endpoints/create_multi_lora_endpoint": {
+      "post": {
+        "summary": "Create Multi-LORA Endpoint",
+        "operationId": "createMultiLoraEndpoint",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMultiLoraEndpointRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "endpoint_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "CreateRegularEndpointRequest": {
+        "type": "object",
+        "required": ["name", "model_name", "checkpoint_id"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "model_name": {
+            "type": "string"
+          },
+          "checkpoint_id": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateMultiLoraEndpointRequest": {
+        "type": "object",
+        "required": ["name", "lora_checkpoints"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "lora_checkpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LoraCheckpoint"
+            }
+          }
+        }
+      },
+      "LoraCheckpoint": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Endpoint": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["REGULAR", "LORA"]
+          },
+          "model_name": {
+            "type": "string"
+          },
+          "checkpoint_id": {
+            "type": "string"
+          },
+          "lora_checkpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LoraCheckpoint"
+            }
+          }
+        }
+      },
       "DatasetRequest": {
         "type": "object",
         "properties": {

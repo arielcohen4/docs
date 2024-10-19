@@ -107,6 +107,13 @@
             "api-reference/checkpoints/convert-checkpoint-to-gguf",
             "api-reference/checkpoints/download-checkpoint-gguf"
           ]
+        },
+        {
+          "group": "Endpoints",
+          "pages": [
+            "api-reference/endpoints/create_multi_lora_endpoint",
+            "api-reference/endpoints/create_regular_endpoint"
+          ]
         }
       ]
     }
