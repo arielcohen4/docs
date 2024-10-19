@@ -525,6 +525,84 @@
           }
         }
       }
+    },
+    "/endpoints": {
+      "post": {
+        "summary": "Get Endpoint",
+        "operationId": "getEndpoint",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetEndpointRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "endpoint_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/endpoints/stop_endpoint": {
+      "post": {
+        "summary": "Stop Endpoint",
+        "operationId": "stopEndpoint",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetStopEndpointRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "endpoint_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -746,6 +824,22 @@
         "type": "object",
         "properties": {
           "checkpoint_id": {
+            "type": "string"
+          }
+        }
+      },
+      "GetEndpointRequest": {
+        "type": "object",
+        "properties": {
+          "endpoint_id": {
+            "type": "string"
+          }
+        }
+      },
+      "GetStopEndpointRequest": {
+        "type": "object",
+        "properties": {
+          "endpoint_id": {
             "type": "string"
           }
         }

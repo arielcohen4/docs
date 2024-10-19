@@ -111,8 +111,10 @@
         {
           "group": "Endpoints",
           "pages": [
+            "api-reference/endpoints/get_endpoint",
             "api-reference/endpoints/create_multi_lora_endpoint",
-            "api-reference/endpoints/create_regular_endpoint"
+            "api-reference/endpoints/create_regular_endpoint",
+            "api-reference/endpoints/stop_endpoint"
           ]
         }
       ]
