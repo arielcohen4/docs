@@ -609,13 +609,17 @@
     "schemas": {
       "CreateRegularEndpointRequest": {
         "type": "object",
-        "required": ["name", "model_name", "checkpoint_id"],
+        "required": ["name", "model_name", "checkpoint_id", "compute"],
         "properties": {
           "name": {
             "type": "string"
           },
           "model_name": {
             "type": "string"
+          },
+          "compute": {
+            "type": "string",
+            "enum": ["T4", "A100-40GB", "A100-80GB", "A10G", "A100-80GB", "L4"]
           },
           "checkpoint_id": {
             "type": "string"
@@ -624,10 +628,14 @@
       },
       "CreateMultiLoraEndpointRequest": {
         "type": "object",
-        "required": ["name", "lora_checkpoints"],
+        "required": ["name", "lora_checkpoints", "compute"],
         "properties": {
           "name": {
             "type": "string"
+          },
+          "compute": {
+            "type": "string",
+            "enum": ["T4", "A100-40GB", "A100-80GB", "A10G", "A100-80GB", "L4"]
           },
           "lora_checkpoints": {
             "type": "array",

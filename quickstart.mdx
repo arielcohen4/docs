@@ -57,7 +57,7 @@ In FlexAI, there are 3 types of Datasets:
 
 You can read more about them in [Datasets tutorial](https://app.getflex.ai/datasets)
 For now we will go with an instruction dataset.
-A datasets will have two .jsonl files, one for train and one for eval (evak is optional but recommended)
+A datasets will have two .jsonl files, one for train and one for eval (eval is optional but recommended)
 
 For example:
 create a train.jsonl file:
@@ -100,11 +100,11 @@ flex_ai datasets create --name "New Dataset" --train-path="train.jsonl" --eval-p
 
 </CodeGroup>
 
-You will get back a dataset id to use for run fine tunning
+You will get back a dataset id to use for fine tuning
 
 ## Fine tune
 
-You view all our models in the [Models Page](https://app.getflex.ai/models)
+You can view all our models in the [Models Page](https://app.getflex.ai/models)
 You can then select a model and dataset and start training.
 You can also send fine tune directly from the [Dashboard](https://app.getflex.ai/create)
 
@@ -117,10 +117,10 @@ task = client.create_finetune(name="My Task New",
                        n_epochs=5,
                        train_with_lora=True,
                        lora_config={"lora_r": 64, "lora_alpha": 8, "lora_dropout": 0.1},
-                       n_checkpoints_and_evaluations_per_epoch=1
-                       batch_size=4, learning_rate=0.0001, n_checkpoints_and_evaluations_per_epoch=1,
-                       save_only_best_checkpoint=False, train_with_lora=True,
-                       lora_config={"lora_r": 64, "lora_alpha": 8, "lora_dropout": 0.1}
+                       n_checkpoints_and_evaluations_per_epoch=1,
+                       batch_size=4,
+                       learning_rate=0.0001,
+                       save_only_best_checkpoint=False
                       )
 ```
 
@@ -142,19 +142,75 @@ flex_ai fine-tuning create \
 
 </CodeGroup>
 
-After you send the fine tuning task, you can view the training metrics on Weights and Biases.
-Also you can check the dashboard to see the price estimation for that task and decide if you want to cancel or not.
-Checkpoints will be created in parallel to the training with CPU usage.
-You can check the training status at [Tasks Page](https://app.getflex.ai/tasks)
+You can monitor the training progress and wait for completion:
 
-## Notebook Example
+```bash Python
+client.wait_for_task_completion(task_id=task["id"])
+```
 
-You can check the notebook example at [Google Colab](https://colab.research.google.com/drive/1nSFRjrHpbz372h7W-2G7jmTuh_Dhiv9x?authuser=2#scrollTo=RiXPwLmHBOCV)
+After the training is complete, you can retrieve the checkpoints:
+
+```bash Python
+checkpoints = client.get_task_checkpoints(task_id=task["id"])
+```
+
+## Create an OpenAI-compatible Endpoint
+
+Once you have your checkpoints, you can create an endpoint to serve your fine-tuned model:
+
+<CodeGroup>
+
+```bash Python
+# Create a list of checkpoints to use
+checkpoints_list = [{
+    "id": checkpoint['id'],
+    "name": "step_" + str(checkpoint['step'])
+} for checkpoint in checkpoints]
+
+# Create the endpoint
+endpoint_id = client.create_multi_lora_endpoint(
+    name="My Endpoint New",
+    lora_checkpoints=checkpoints_list,
+    compute="A100-40GB"
+)
+
+# Wait for the endpoint to be ready
+endpoint = client.wait_for_endpoint_ready(endpoint_id=endpoint_id)
+```
+
+</CodeGroup>
+
+## Use your Fine-tuned Model
+
+You can use your fine-tuned model through the OpenAI-compatible API:
+
+<CodeGroup>
+
+```bash Python
+from openai import OpenAI
+
+openai_endpoint_url = endpoint["url"]
+client = OpenAI(
+    api_key="your_api_key_here",
+    base_url=f"{openai_endpoint_url}/v1"
+)
+
+completion = client.completions.create(
+    model="meta-llama/Llama-3.2-1B-Instruct",
+    prompt="Translate the following English text to French",
+    max_tokens=60
+)
+
+print(completion.choices[0].text)
+```
+
+</CodeGroup>
 
 ## Full Example
 
 ```bash Python
 from flex_ai import FlexAI
+from openai import OpenAI
 
 # Initialize the Flex AI client
 client = FlexAI(api_key="your_api_key_here")
@@ -184,8 +240,34 @@ task = client.create_finetune(
     save_only_best_checkpoint=True
 )
 
-# You can now monitor the task status and results through the Flex AI dashboard
-print(f"Fine-tuning task created with ID: {task['id']}")
-print("Check the Tasks Page for status updates: https://app.getflex.ai/tasks")
+# Wait for training completion
+client.wait_for_task_completion(task_id=task["id"])
 
+# Get checkpoints
+checkpoints = client.get_task_checkpoints(task_id=task["id"])
+checkpoints_list = [{
+    "id": checkpoint['id'],
+    "name": "step_" + str(checkpoint['step'])
+} for checkpoint in checkpoints]
+
+# Create endpoint
+endpoint_id = client.create_multi_lora_endpoint(
+    name="My Endpoint New",
+    lora_checkpoints=checkpoints_list,
+    compute="A100-40GB"
+)
+endpoint = client.wait_for_endpoint_ready(endpoint_id=endpoint_id)
+
+# Use the model
+openai_client = OpenAI(
+    api_key="your_api_key_here",
+    base_url=f"{endpoint['url']}/v1"
+)
+completion = openai_client.completions.create(
+    model="meta-llama/Llama-3.2-1B-Instruct",
+    prompt="Translate the following English text to French",
+    max_tokens=60
+)
+
+print(completion.choices[0].text)
 ```
