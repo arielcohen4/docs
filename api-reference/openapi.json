@@ -609,7 +609,7 @@
     "schemas": {
       "CreateRegularEndpointRequest": {
         "type": "object",
-        "required": ["name", "model_name", "checkpoint_id", "compute"],
+        "required": ["name", "model_name", "checkpoint_id", "compute", "idle_timeout_seconds"],
         "properties": {
           "name": {
             "type": "string"
@@ -623,6 +623,10 @@
           },
           "checkpoint_id": {
             "type": "string"
+          },
+          "idle_timeout_seconds": {
+            "type": "integer",
+            "default": 60
           }
         }
       },
@@ -642,6 +646,10 @@
             "items": {
               "$ref": "#/components/schemas/LoraCheckpoint"
             }
+          },
+          "idle_timeout_seconds": {
+            "type": "integer",
+            "default": 60
           }
         }
       },
