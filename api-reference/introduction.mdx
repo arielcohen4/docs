@@ -1,33 +1,26 @@
 ---
 title: "Introduction"
-description: "Example section for showcasing API endpoints"
+description: "Getting started with the FlexAI API"
 ---
-
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
-
-## Welcome1
-
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
-
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API endpoints require authentication using Bearer tokens. You'll need to include your API key in the Authorization header of each request:
+
+### Getting Your API Key
+
+1. First, [register for an account](https://app.getflex.ai/sign-in) to get an API key. New accounts come with $5 in credits to get started.
+
+2. Once registered, go to your [API Settings](https://app.getflex.ai/settings/api-keys) to find your API key.
+
+### Using Your API Key
+
+You can use your API key in several ways:
+
+#### Usage
+
+All API endpoints are authenticated using Bearer tokens and picked up from the header.
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+Authorization: Bearer YOUR_API_KEY
 ```
